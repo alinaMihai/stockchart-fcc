@@ -16,3 +16,4 @@ var app = angular.module('stockchartApp', [
     });
 
 app.value('moment', moment);
+app.value('Highcharts', Highcharts);

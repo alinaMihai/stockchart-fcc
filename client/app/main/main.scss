@@ -32,3 +32,10 @@
 .navbar-text {
   margin-left: 15px;
 }
+.stocks a:hover{
+   text-decoration:none;
+}
+.deleteStock{
+    cursor:pointer;
+    float:right;
+}

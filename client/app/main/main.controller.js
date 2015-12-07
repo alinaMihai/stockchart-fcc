@@ -10,16 +10,21 @@
       /* @ngInject */
       function MainCtrl($scope, socket, StockService) {
           var vm = this;
-          var stockSuggest = ["goog", "fb", "ea", "aapl", "amzn", "jd", "ebay", "tcehy", "baba", "expe", "nflx", "bidu", "yhoo", "grpn", "lnkd", "twtr"];
+          vm.stocks = [];
+          vm.deleteStock = deleteStock;
           vm.chartConfig = {
               options: {
-                  chart: {
-                      zoomType: 'x'
-                  },
                   rangeSelector: {
-                      enabled: true
+                      enabled: false
                   },
-                  navigator: {
+                  tooltip: {
+                      style: {
+                          padding: 10,
+                          fontWeight: 'bold'
+                      }
+                  },
+                  animation: true,
+                  legend: {
                       enabled: true
                   }
               },
@@ -36,15 +41,33 @@
           ////////////////
 
           function activate() {
-              StockService.getStockData(stockSuggest[1]).then(function(data) {
-                  console.log(data);
-                  $scope.chartConfig.series.push({
-                      id: 1,
-                      data: data
+              StockService.getStocks().then(function(stocks) {
+                  stocks.forEach(function(stock) {
+                      var organization = stock.dataset.name.split('(')[0];
+                      vm.stocks.push([organization, stock.dataset.dataset_code]);
+                      vm.chartConfig.series.push({
+                          id: stock.dataset.dataset_code,
+                          name: organization,
+                          data: processStockData(stock.dataset.data)
+                      });
                   });
               });
           }
 
+          function deleteStock(stock) {
+              StockService.deleteStock(stock[1].toLowerCase()).then(function() {
 
+              });
+          }
+
+          function processStockData(stockData) {
+              var values = [];
+              stockData.forEach(function(item, i) {
+                  values[i] = [];
+                  values[i].push(Date.parse(item[0]));
+                  values[i].push(item[4]);
+              });
+              return values;
+          }
       }
   })();
