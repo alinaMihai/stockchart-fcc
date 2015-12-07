@@ -5,10 +5,10 @@
         .module('stockchartApp')
         .service('StockService', StockService);
 
-    StockService.$inject = ['$http', '$q', 'quandlApiKey', 'moment'];
+    StockService.$inject = ['$http', '$q', 'quandlApiKey', 'moment', 'toastr'];
 
     /* @ngInject */
-    function StockService($http, $q, quandlApiKey, moment) {
+    function StockService($http, $q, quandlApiKey, moment, toastr) {
         this.getStocks = getStocks;
         this.deleteStock = deleteStock;
         this.addStock = addStock;
@@ -65,7 +65,7 @@
                     deferred.resolve(response);
                 })
                 .error(function(err) {
-                    console.log(err);
+                    toastr.warning('Stock already present');
                     deferred.reject(err);
                 });
             return deferred.promise;

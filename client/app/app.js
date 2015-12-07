@@ -6,7 +6,8 @@ var app = angular.module('stockchartApp', [
         'ngSanitize',
         'btford.socket-io',
         'ui.router',
-        'highcharts-ng'
+        'highcharts-ng',
+        'angularSpinner'
     ])
     .config(function($stateProvider, $urlRouterProvider, $locationProvider) {
         $urlRouterProvider
@@ -17,3 +18,12 @@ var app = angular.module('stockchartApp', [
 
 app.value('moment', moment);
 app.value('Highcharts', Highcharts);
+app.constant('toastr', toastr);
+app.constant('_', window._);
+app.config(toastrConfig);
+toastrConfig.$inject = ['toastr'];
+/* @ngInject */
+function toastrConfig(toastr) {
+    toastr.options.timeOut = 4000;
+    toastr.options.positionClass = 'toast-top-right';
+}

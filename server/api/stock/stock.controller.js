@@ -1,8 +1,8 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /stocks              ->  index
- * POST    /stocks              ->  create
- * DELETE  /stocks/:id          ->  destroy
+ * GET     /stocks                ->  index
+ * POST    /stocks                ->  create
+ * DELETE  /stocks/:name          ->  destroy
  */
 
 'use strict';

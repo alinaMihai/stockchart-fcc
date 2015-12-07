@@ -5,12 +5,13 @@
           .module('stockchartApp')
           .controller('MainCtrl', MainCtrl);
 
-      MainCtrl.$inject = ['$scope', 'socket', 'StockService'];
+      MainCtrl.$inject = ['$scope', 'socket', 'StockService', 'usSpinnerService'];
 
       /* @ngInject */
-      function MainCtrl($scope, socket, StockService) {
+      function MainCtrl($scope, socket, StockService, usSpinnerService) {
           var vm = this;
           vm.stocks = [];
+          vm.suggestions = ["goog", "fb", "ea", "aapl", "amzn", "jd", "ebay", "tcehy", "baba", "expe", "nflx", "bidu", "yhoo", "grpn", "lnkd", "twtr"];
           vm.deleteStock = deleteStock;
           vm.addStock = addStock;
           vm.chartConfig = {
@@ -70,7 +71,9 @@
                       vm.stocks.push(serverStocks[index]);
 
                   });
+                  usSpinnerService.stop('spinner-1');
               });
+
           }
 
           function deleteStock(stock) {
