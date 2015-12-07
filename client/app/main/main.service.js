@@ -11,6 +11,8 @@
     function StockService($http, $q, quandlApiKey, moment) {
         this.getStocks = getStocks;
         this.deleteStock = deleteStock;
+        this.addStock = addStock;
+        this.getStockData = getStockData;
 
         ////////////////
 
@@ -43,6 +45,18 @@
         function deleteStock(name) {
             var deferred = $q.defer();
             $http.delete('/api/stocks/' + name)
+                .success(function(response) {
+                    deferred.resolve(response);
+                })
+                .error(function(err) {
+                    deferred.reject(err);
+                });
+            return deferred.promise;
+        }
+
+        function addStock(name) {
+            var deferred = $q.defer();
+            $http.post('/api/stocks/', name)
                 .success(function(response) {
                     deferred.resolve(response);
                 })
