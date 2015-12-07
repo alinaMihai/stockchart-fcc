@@ -11,7 +11,7 @@
       function MainCtrl($scope, socket, StockService, usSpinnerService) {
           var vm = this;
           vm.stocks = [];
-          vm.suggestions = ["goog", "fb", "ea", "aapl", "amzn", "jd", "ebay", "tcehy", "baba", "expe", "nflx", "bidu", "yhoo", "grpn", "lnkd", "twtr"];
+          vm.suggestions = ["goog", "fb", "ea", "aapl", "amzn", "ebay", "nflx", "yhoo", "lnkd", "twtr"];
           vm.deleteStock = deleteStock;
           vm.addStock = addStock;
           vm.chartConfig = {
