@@ -40,7 +40,6 @@
                     promises.push(getStockData(stock.name));
                 });
                 $q.all(promises).then(function(stocks) {
-                    console.log(stocks);
                     deferred.resolve([stocks, serverStocks]);
                 });
                 return deferred.promise;
@@ -76,7 +75,6 @@
             var deferred = $q.defer();
             $http.get('/api/stocks')
                 .success(function(stocks) {
-                    console.log(stocks);
                     deferred.resolve(stocks);
                 })
                 .error(function(err) {
