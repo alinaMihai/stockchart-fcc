@@ -17,7 +17,7 @@
   </div>
   <div class="row stocks">
     <div class="col-lg-12">
-      <ol class="list-group"><li class="list-group-item" ng-repeat="stock in vm.stocks"><a ng-click="vm.deleteStock(stock)">{{stock[0]}}({{stock[1]}}) <i class="fa fa-times deleteStock" title="Remove stock"></i></a></li></ol>
+      <ol class="list-group"><li class="list-group-item" ng-repeat="stock in vm.stocks"><a ng-click="vm.deleteStock(stock)">{{stock.organization||'not available'}} ({{stock.name}}) <i class="fa fa-times deleteStock" title="Remove stock"></i></a></li></ol>
     </div>
   </div>
   

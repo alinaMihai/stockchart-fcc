@@ -54,50 +54,60 @@
               $scope.$on('$destroy', function() {
                   socket.unsyncUpdates('stock');
               });
-              StockService.getStocks().then(function(stocks) {
-                  stocks.forEach(function(stock) {
-                      var organization = stock.dataset.name.split('(')[0];
-                      vm.stocks.push([organization, stock.dataset.dataset_code]);
-                      vm.chartConfig.series.push({
-                          id: stock.dataset.dataset_code,
-                          name: organization,
-                          data: processStockData(stock.dataset.data)
-                      });
+              StockService.getStocks().then(function(data) {
+                  var stocks = data[0];
+                  var serverStocks = data[1];
+                  stocks.forEach(function(stock, index) {
+                      if (stock) {
+                          var organization = stock.dataset.name.split('(')[0];
+                          serverStocks[index].organization = organization;
+                          vm.chartConfig.series.push({
+                              id: stock.dataset.dataset_code,
+                              name: organization,
+                              data: processStockData(stock.dataset.data)
+                          });
+                      }
+                      vm.stocks.push(serverStocks[index]);
+
                   });
               });
           }
 
           function deleteStock(stock) {
-              StockService.deleteStock(stock[1].toLowerCase()).then(function() {});
+              StockService.deleteStock(stock.name).then(function() {});
           }
 
-          function addStock(name) {
-              StockService.addStock(name).then(function() {
-
+          function addStock() {
+              StockService.addStock({
+                  name: vm.newStock
+              }).then(function() {
+                  vm.newStock = "";
               });
           }
 
           function handleDelete(stock) {
               var stockCode = stock.name;
-              var stockIndex;
-              var stockSeriesIndex;
-              vm.stocks.forEach(function(item, index) {
-                  if (item[1].toLowerCase() === stockCode) {
-                      stockIndex = index;
-                  }
-              });
-              vm.stocks.splice(stockIndex, 1);
-
               vm.chartConfig.series.forEach(function(series, index) {
                   if (series.id.toLowerCase() === stockCode) {
-                      stockSeriesIndex = index;
+                      vm.chartConfig.series.splice(index, 1);
                   }
               });
-              vm.chartConfig.series.splice(stockSeriesIndex, 1);
           }
 
-          function handleAdd(stock) {
+          function handleAdd(serverStock) {
 
+              StockService.getStockData(serverStock.name).then(function(stock) {
+                  if (stock) {
+                      var organization = stock.dataset.name.split('(')[0];
+                      serverStock.organization = organization;
+                      vm.chartConfig.series.push({
+                          id: stock.dataset.dataset_code,
+                          name: organization,
+                          data: processStockData(stock.dataset.data)
+                      });
+                  }
+
+              });
           }
 
           function processStockData(stockData) {

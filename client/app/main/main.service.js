@@ -21,9 +21,13 @@
             var endDate = moment().format('YYYY-MM-DD');
             var startDate = moment().subtract(365, 'd').format('YYYY-MM-DD');
             $http.get('https://www.quandl.com/api/v3/datasets/WIKI/' + stockName + '.json?api_key=' + quandlApiKey +
-                '&order=asc&start_date=' + startDate + '&end_date=' + endDate).then(function(response) {
-                deferred.resolve(response.data);
-            });
+                '&order=asc&start_date=' + startDate + '&end_date=' + endDate)
+                .success(function(stock) {
+                    deferred.resolve(stock);
+                })
+                .error(function(err) {
+                    deferred.resolve(undefined);
+                });
             return deferred.promise;
         }
 
@@ -31,12 +35,13 @@
             var promises = [];
             var deferred = $q.defer();
             return getServerSideStocks().then(function(stocks) {
+                var serverStocks = stocks;
                 stocks.forEach(function(stock) {
                     promises.push(getStockData(stock.name));
                 });
                 $q.all(promises).then(function(stocks) {
                     console.log(stocks);
-                    deferred.resolve(stocks);
+                    deferred.resolve([stocks, serverStocks]);
                 });
                 return deferred.promise;
             });
@@ -54,13 +59,14 @@
             return deferred.promise;
         }
 
-        function addStock(name) {
+        function addStock(stock) {
             var deferred = $q.defer();
-            $http.post('/api/stocks/', name)
+            $http.post('/api/stocks/', stock)
                 .success(function(response) {
                     deferred.resolve(response);
                 })
                 .error(function(err) {
+                    console.log(err);
                     deferred.reject(err);
                 });
             return deferred.promise;

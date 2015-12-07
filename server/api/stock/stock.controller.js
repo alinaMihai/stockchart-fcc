@@ -22,12 +22,22 @@ exports.index = function(req, res) {
 
 // Creates a new stock in the DB.
 exports.create = function(req, res) {
-    Stock.create(req.body, function(err, stock) {
-        if (err) {
-            return handleError(res, err);
+    var existsAlready = Stock.findOne({
+        name: req.body.name
+    }).exec(function(err, stock) {
+        if (!stock) {
+            Stock.create(req.body, function(err, stock) {
+                if (err) {
+                    return handleError(res, err);
+                }
+                return res.status(201).json(stock);
+            });
+        } else {
+            return res.status(500).send("Stock already exists");
         }
-        return res.status(201).json(stock);
     });
+
+
 };
 
 // Deletes a stock from the DB.
